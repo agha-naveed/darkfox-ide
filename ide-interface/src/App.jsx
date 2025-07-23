@@ -136,6 +136,7 @@ export default function App() {
     const ext = name.split(".").pop();
     switch (ext) {
       case "js":
+      case "mjs":
       case "jsx": return "javascript";
       case "ts":
       case "tsx": return "typescript";
@@ -143,6 +144,8 @@ export default function App() {
       case "css": return "css";
       case "json": return "json";
       case "py": return "python";
+      case "ru": return "ruby";
+      case "rs":  return "rust";
       case "java": return "java";
       case "c": return "c";
       case "cpp": return "cpp";
