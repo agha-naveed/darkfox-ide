@@ -17,7 +17,7 @@ export default function StatusBar({ fileName, language, editor }) {
   }, [editor]);
 
   return (
-    <div className="h-8 fixed w-full bottom-0 left-0 bg-zinc-900 text-gray-300 flex justify-between items-center px-3 text-sm border-t border-gray-700">
+    <div className="h-8 fixed w-full z-[99999] bottom-0 left-0 bg-zinc-900 text-gray-300 flex justify-between items-center px-3 text-sm border-t border-gray-700">
       <div>
         {fileName || "No file"} &nbsp;|&nbsp; {language || "Plaintext"}
       </div>

@@ -158,7 +158,7 @@ export default function App() {
       <div className="w-64 bg-zinc-900 text-white p-2">
         <button
           onClick={openFolder}
-          className="w-full bg-blue-600 py-2 rounded mb-2"
+          className="w-full bg-blue-600 py-[6px] cursor-pointer transition-all hover:bg-blue-800 rounded mb-2"
         >
           Open Folder
         </button>
@@ -169,7 +169,7 @@ export default function App() {
       {/* Main area */}
       <div className="flex-1 flex flex-col bg-zinc-800">
         {/* Tabs */}
-        {/* <div className="flex bg-gray-900 text-white border-b border-gray-700">
+        <div className="flex bg-gray-900 text-white border-b border-gray-700">
           {openFiles.map((file) => (
             <div
               key={file.name}
@@ -190,15 +190,15 @@ export default function App() {
               </button>
             </div>
           ))}
-        </div> */}
-        <TabBar
+        </div>
+        {/* <TabBar
           openFiles={openFiles}
           activeFile={activeFile}
           onSwitch={switchTab}
           onClose={closeTab}
           onCloseOthers={(file) => setOpenFiles(openFiles.filter(f => f.name === file.name))}
           onCloseAll={() => { setOpenFiles([]); setActiveFile(null); setFileContent(""); }}
-        />
+        /> */}
 
         {/* Editor */}
         {activeFile ? (
