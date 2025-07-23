@@ -160,7 +160,8 @@ export default function App() {
         >
           Open Folder
         </button>
-        <FileExplorer tree={tree} onFileClick={openFile} />
+        {/* <FileExplorer tree={tree} onFileClick={openFile} /> */}
+        <FileExplorer tree={tree} onFileClick={openFile} refreshTree={() => buildTreeAgain()} />
       </div>
 
       {/* Main area */}
@@ -223,23 +224,25 @@ export default function App() {
 }
 
 // Build folder tree
-async function buildTree(dirHandle) {
+async function buildTree(dirHandle, parent = null) {
   const result = [];
   for await (const entry of dirHandle.values()) {
     if (entry.kind === "directory") {
+      const children = await buildTree(entry, entry);
       result.push({
         name: entry.name,
         kind: entry.kind,
-        handle: entry,
-        children: await buildTree(entry),
+        handle: Object.assign(entry, { _parent: dirHandle }),
+        children,
       });
     } else {
       result.push({
         name: entry.name,
         kind: entry.kind,
-        handle: entry,
+        handle: Object.assign(entry, { _parent: dirHandle }),
       });
     }
   }
   return result;
 }
+
