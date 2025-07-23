@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import FileExplorer from "./components/FileExplorer";
 import CodeEditor from "./components/CodeEditor";
+import TabBar from "./components/TabBar";
 
 export default function App() {
   const [tree, setTree] = useState([]);
@@ -152,7 +153,7 @@ export default function App() {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900 text-white p-2 overflow-y-auto">
+      <div className="w-64 bg-zinc-900 text-white p-2">
         <button
           onClick={openFolder}
           className="w-full bg-blue-600 py-2 rounded mb-2"
@@ -163,9 +164,9 @@ export default function App() {
       </div>
 
       {/* Main area */}
-      <div className="flex-1 flex flex-col bg-gray-800">
+      <div className="flex-1 flex flex-col bg-zinc-800">
         {/* Tabs */}
-        <div className="flex bg-gray-900 text-white border-b border-gray-700">
+        {/* <div className="flex bg-gray-900 text-white border-b border-gray-700">
           {openFiles.map((file) => (
             <div
               key={file.name}
@@ -186,7 +187,15 @@ export default function App() {
               </button>
             </div>
           ))}
-        </div>
+        </div> */}
+        <TabBar
+          openFiles={openFiles}
+          activeFile={activeFile}
+          onSwitch={switchTab}
+          onClose={closeTab}
+          onCloseOthers={(file) => setOpenFiles(openFiles.filter(f => f.name === file.name))}
+          onCloseAll={() => { setOpenFiles([]); setActiveFile(null); setFileContent(""); }}
+        />
 
         {/* Editor */}
         {activeFile ? (

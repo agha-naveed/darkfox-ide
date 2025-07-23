@@ -14,7 +14,7 @@ export default function FileExplorer({ tree, onFileClick }) {
     e.preventDefault();
     setContextMenu({
       x: e.clientX,
-      y: e.clientY,
+      y: (e.clientY / 2) + 60+'px',
       node,
     });
   };
@@ -79,7 +79,7 @@ export default function FileExplorer({ tree, onFileClick }) {
             top: contextMenu.y,
             left: contextMenu.x,
           }}
-          className="absolute bg-gray-800 text-white rounded shadow-lg p-2 w-40 z-50"
+          className="absolute bg-gray-800 text-white rounded shadow-lg p-2 w-40 z-[99999]"
           onMouseLeave={() => setContextMenu(null)}
         >
           <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer">New File</div>
