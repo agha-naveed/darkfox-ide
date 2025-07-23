@@ -1,6 +1,6 @@
 import Editor from "@monaco-editor/react";
 
-export default function CodeEditor({ content, setContent, language, onSave }) {
+export default function CodeEditor({ content, setContent, language, onSave, setEditorInstance }) {
   return (
     <div className="flex-1 relative">
       <Editor
@@ -16,6 +16,9 @@ export default function CodeEditor({ content, setContent, language, onSave }) {
           minimap: { enabled: true },
         }}
         onMount={(editor, monaco) => {
+          // Save editor instance for StatusBar
+          if (setEditorInstance) setEditorInstance(editor);
+
           // Bind Ctrl+S for save
           editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
             if (onSave) onSave(content);

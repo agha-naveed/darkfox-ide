@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import FileExplorer from "./components/FileExplorer";
 import CodeEditor from "./components/CodeEditor";
 import TabBar from "./components/TabBar";
+import StatusBar from "./components/StatusBar";
 
 export default function App() {
   const [tree, setTree] = useState([]);
   const [openFiles, setOpenFiles] = useState([]); // open tabs
   const [activeFile, setActiveFile] = useState(null); // active tab
   const [fileContent, setFileContent] = useState(""); // editor content
+  const [editorInstance, setEditorInstance] = useState(null);
 
   // Open a folder
   const openFolder = async () => {
@@ -201,6 +203,7 @@ export default function App() {
         {/* Editor */}
         {activeFile ? (
           <CodeEditor
+            setEditorInstance={setEditorInstance}
             content={fileContent}
             setContent={(val) => {
               setFileContent(val);
@@ -218,6 +221,11 @@ export default function App() {
             Open a file to start editing
           </div>
         )}
+        <StatusBar
+          fileName={activeFile?.name}
+          language={activeFile ? activeFile.name.split(".").pop() : "plaintext"}
+          editor={editorInstance}
+        />
       </div>
     </div>
   );
