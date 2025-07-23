@@ -109,6 +109,27 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
         );
       }
 
+      async function buildTree(dirHandle, parent = null) {
+        const result = [];
+        for await (const entry of dirHandle.values()) {
+          if (entry.kind === "directory") {
+            const children = await buildTree(entry, entry);
+            result.push({
+              name: entry.name,
+              kind: entry.kind,
+              handle: Object.assign(entry, { _parent: dirHandle }),
+              children,
+            });
+          } else {
+            result.push({
+              name: entry.name,
+              kind: entry.kind,
+              handle: Object.assign(entry, { _parent: dirHandle }),
+            });
+          }
+        }
+        return result;
+      }
       
       return (
         <div key={path} className="ml-2">

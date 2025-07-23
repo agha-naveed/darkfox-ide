@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import FileExplorer from "./components/FileExplorer";
 import CodeEditor from "./components/CodeEditor";
-import TabBar from "./components/TabBar";
 import StatusBar from "./components/StatusBar";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function App() {
   const [tree, setTree] = useState([]);
@@ -11,9 +9,6 @@ export default function App() {
   const [activeFile, setActiveFile] = useState(null); // active tab
   const [fileContent, setFileContent] = useState(""); // editor content
   const [editorInstance, setEditorInstance] = useState(null);
-
-  const [splitView, setSplitView] = useState(false);
-  const [rightPaneFile, setRightPaneFile] = useState(null);
 
   // Open a folder
   const openFolder = async () => {
@@ -156,53 +151,6 @@ export default function App() {
     }
   };
 
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    const newOrder = Array.from(openFiles);
-    const [moved] = newOrder.splice(result.source.index, 1);
-    newOrder.splice(result.destination.index, 0, moved);
-    setOpenFiles(newOrder);
-  };
-  <DragDropContext onDragEnd={handleDragEnd}>
-    <Droppable droppableId="tabs" direction="horizontal">
-      {(provided) => (
-        <div
-          className="flex bg-gray-900 text-white border-b border-gray-700"
-          {...provided.droppableProps}
-          ref={provided.innerRef}
-        >
-          {openFiles.map((file, index) => (
-            <Draggable key={file.name} draggableId={file.name} index={index}>
-              {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                  className={`px-3 py-1 cursor-pointer ${
-                    file.name === activeFile?.name
-                      ? "bg-gray-700"
-                      : "bg-gray-800"
-                  }`}
-                  onClick={() => switchTab(file)}
-                >
-                  {file.name}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      closeTab(file);
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-            </Draggable>
-          ))}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
-  </DragDropContext>
 
   return (
     <div className="flex h-screen">
