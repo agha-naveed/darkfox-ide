@@ -1,43 +1,36 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, protocol } = require("electron");
 const path = require("path");
 const fs = require("fs");
 
 let mainWindow;
 
-function createWindow() {
+app.on("ready", () => {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false, // for simplicity
-      // preload: path.join(__dirname, "preload.js"),
-      // preload: path.join(app.getAppPath(), "public", "preload.js")
-
+      nodeIntegration: true,   // Allow window.require in React
+      contextIsolation: false,
     },
   });
 
+  app.whenReady().then(() => {
+  protocol.interceptFileProtocol('file', (req, cb) => {
+    const url = req.url.substr(7); // strip 'file://'
+    cb({ path: path.normalize(url) });
+  });
+});
+  const isDev = !app.isPackaged;
   mainWindow.loadURL(
-    app.isPackaged
-      ? `file://${path.join(__dirname, "../dist/index.html")}`
-      : "http://localhost:5173"
+    isDev
+      ? "http://localhost:5173"
+      : `file://${path.join(__dirname, "../dist/index.html")}`
   );
 
-  if (!app.isPackaged) mainWindow.webContents.openDevTools();
-}
-
-app.on("ready", createWindow);
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
-});
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  mainWindow.webContents.openDevTools();
 });
 
-
-// ===================
-// IPC: Folder & File
-// ===================
+// === Folder picker ===
 ipcMain.handle("open-folder", async () => {
   const result = await dialog.showOpenDialog({ properties: ["openDirectory"] });
   if (result.canceled) return null;
@@ -48,26 +41,21 @@ ipcMain.handle("open-folder", async () => {
     return items.map((item) => {
       const fullPath = path.join(dirPath, item.name);
       if (item.isDirectory()) {
-        return {
-          name: item.name,
-          kind: "directory",
-          path: fullPath,
-          children: buildTree(fullPath),
-        };
+        return { name: item.name, kind: "directory", path: fullPath, children: buildTree(fullPath) };
       }
       return { name: item.name, kind: "file", path: fullPath };
     });
   }
 
-  return { tree: buildTree(folderPath), rootPath: folderPath };
+  return { tree: buildTree(folderPath) };
 });
 
-// Read File
+// === Read File ===
 ipcMain.handle("read-file", async (_, filePath) => {
   return fs.readFileSync(filePath, "utf8");
 });
 
-// Save File
+// === Save File ===
 ipcMain.handle("save-file", async (_, { filePath, content }) => {
   fs.writeFileSync(filePath, content, "utf8");
   return true;

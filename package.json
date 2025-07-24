@@ -2,6 +2,7 @@
   "name": "ide",
   "version": "1.0.0",
   "main": "public/electron.js",
+  "homepage": "./",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd ide-interface && npm run dev",
