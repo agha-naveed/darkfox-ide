@@ -1,13 +1,13 @@
 {
   "name": "ide",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "public/electron.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd ide-interface && npm start",
+    "start": "cd ide-interface && npm run dev",
     "build": "cd ide-interface && npm run build",
     "electron": "npm run build && electron .",
-    "dev": "concurrently \"npm run start\" \"wait-on http://localhost:3000 && electron .\""
+    "dev": "concurrently \"npm run start\" \"wait-on http://localhost:5173 && electron .\""
   },
   "keywords": [],
   "author": "",
