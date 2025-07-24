@@ -1,13 +1,15 @@
 const { app, BrowserWindow, ipcMain, dialog, protocol } = require("electron");
 // const path = require("path");
-// const fs = require("fs");
+const fs = require("fs");
 const path = require('path');
-const fs = require('fs').promises;
+// const fs = require('fs').promises;
 
 
 let mainWindow;
 
 app.on("ready", () => {
+  console.log("Electron main started");
+
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -41,6 +43,7 @@ app.on("ready", () => {
 });
 
 ipcMain.handle("open-folder", async () => {
+  console.log("open-folder called");
   const result = await dialog.showOpenDialog({ properties: ["openDirectory"] });
   if (result.canceled) return null;
   const folderPath = result.filePaths[0];
@@ -56,7 +59,6 @@ ipcMain.handle("open-folder", async () => {
   }
   return { tree: buildTree(folderPath) };
 });
-
 
   ipcMain.handle('read-file', async (_, filePath) => {
     try {

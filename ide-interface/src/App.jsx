@@ -11,18 +11,11 @@ export default function App() {
   const [fileContent, setFileContent] = useState(""); // editor content
   const [editorInstance, setEditorInstance] = useState(null);
 
-  // Open a folder
-  // const openFolder = async () => {
-  //   const dirHandle = await window.showDirectoryPicker();
-  //   const treeData = await buildTree(dirHandle);
-  //   setTree(treeData);
-  // };
   const openFolder = async () => {
-    // const result = await ipcRenderer.invoke("open-folder");
     const result = await ipcRenderer.invoke('open-folder');
-    // const result = await window.api.openFolder();
+    if (result)   setTree(result.tree);
+
     console.log(result);
-    if (result) setTree(result.tree);
   };
 
 
