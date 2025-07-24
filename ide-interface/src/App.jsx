@@ -237,15 +237,24 @@ export default function App() {
               // Update active file content
               setActiveFile((prev) => ({ ...prev, content: val, saved: false }));
             }}
-            onSave={() => {
-              if (activeFile?.path) {
-                window.api.saveFile(activeFile.path, activeFile.content);
-                setOpenFiles((files) =>
-                  files.map((f) =>
-                    f.path === activeFile.path ? { ...f, saved: true } : f
-                  )
-                );
-                setActiveFile((prev) => ({ ...prev, saved: true }));
+            onSave={async () => {
+              if (!activeFile) return;
+
+              if (activeFile.path) {
+                // Save to existing path
+                await window.api.saveFile(activeFile.path, activeFile.content);
+              } else {
+                // Fallback to Save As for new files
+                const newPath = await window.api.saveFileAs(activeFile.content);
+                if (newPath) {
+                  const name = newPath.split(/[/\\]/).pop();
+                  setOpenFiles((files) =>
+                    files.map((f) =>
+                      f === activeFile ? { ...f, path: newPath, name, saved: true } : f
+                    )
+                  );
+                  setActiveFile({ ...activeFile, path: newPath, name, saved: true });
+                }
               }
             }}
             language={getLanguageFromExtension(activeFile?.name)}
