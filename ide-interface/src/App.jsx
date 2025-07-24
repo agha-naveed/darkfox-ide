@@ -18,29 +18,21 @@ export default function App() {
   // };
   const openFolder = async () => {
     const { ipcRenderer } = window.require("electron");
-    const result = await ipcRenderer.invoke("open-folder");
+    // const result = await ipcRenderer.invoke("open-folder");
+    const result = await window.api.openFolder();
+    console.log(result);
     if (result) setTree(result.tree);
   };
 
 
   // Open a file
-  const openFile = async (file) => {
-  let content;
-  let name;
-
-  if (window.electronAPI) {
-    // Electron mode → file is a path
-    content = await window.electronAPI.readFile(file);
-    name = file.split(/[/\\]/).pop(); // Extract filename
-  } else {
-    // Browser mode → file is a handle
-    const f = await file.getFile();
-    content = await f.text();
-    name = file.name;
-  }
+  const openFile = async (filePath) => {
+  // Ensure filePath is a string
+  const content = await window.api.readFile(filePath);
+  const name = filePath.split(/[/\\]/).pop();
 
   // If already open → switch to it
-  const existingTab = openFiles.find((f) => f.name === name);
+  const existingTab = openFiles.find((f) => f.path === filePath);
   if (existingTab) {
     setActiveFile(existingTab);
     setFileContent(content);
@@ -48,11 +40,12 @@ export default function App() {
   }
 
   // Otherwise → add new tab
-  const newTab = { name, handle: file, saved: true };
+  const newTab = { name, path: filePath, saved: true };
   setOpenFiles((prev) => [...prev, newTab]);
   setActiveFile(newTab);
   setFileContent(content);
 };
+
 
 
   // Switch tab
@@ -184,7 +177,7 @@ export default function App() {
           Open Folder
         </button>
         {/* <FileExplorer tree={tree} onFileClick={openFile} /> */}
-        <FileExplorer tree={tree} onFileClick={openFile} refreshTree={() => buildTreeAgain()} />
+        <FileExplorer tree={tree} onFileClick={(node) => openFile(node.path)} refreshTree={() => buildTreeAgain()} />
       </div>
 
       {/* Main area */}

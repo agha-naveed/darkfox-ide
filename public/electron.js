@@ -11,6 +11,9 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false, // for simplicity
+      // preload: path.join(__dirname, "preload.js"),
+      // preload: path.join(app.getAppPath(), "public", "preload.js")
+
     },
   });
 
@@ -76,29 +79,29 @@ ipcMain.handle("save-file-as", async (_, content) => {
 });
 
 
-ipcMain.handle("create-new-file", async (_, { dirPath, name }) => {
-  const filePath = path.join(dirPath, name);
-  fs.writeFileSync(filePath, ""); // empty file
-  return filePath;
-});
+// ipcMain.handle("create-new-file", async (_, { dirPath, name }) => {
+//   const filePath = path.join(dirPath, name);
+//   fs.writeFileSync(filePath, ""); // empty file
+//   return filePath;
+// });
 
-ipcMain.handle("create-new-folder", async (_, { dirPath, name }) => {
-  const folderPath = path.join(dirPath, name);
-  fs.mkdirSync(folderPath);
-  return folderPath;
-});
+// ipcMain.handle("create-new-folder", async (_, { dirPath, name }) => {
+//   const folderPath = path.join(dirPath, name);
+//   fs.mkdirSync(folderPath);
+//   return folderPath;
+// });
 
-ipcMain.handle("rename-entry", async (_, { oldPath, newName }) => {
-  const newPath = path.join(path.dirname(oldPath), newName);
-  fs.renameSync(oldPath, newPath);
-  return newPath;
-});
+// ipcMain.handle("rename-entry", async (_, { oldPath, newName }) => {
+//   const newPath = path.join(path.dirname(oldPath), newName);
+//   fs.renameSync(oldPath, newPath);
+//   return newPath;
+// });
 
-ipcMain.handle("delete-entry", async (_, entryPath) => {
-  if (fs.lstatSync(entryPath).isDirectory()) {
-    fs.rmSync(entryPath, { recursive: true, force: true });
-  } else {
-    fs.unlinkSync(entryPath);
-  }
-  return true;
-});
+// ipcMain.handle("delete-entry", async (_, entryPath) => {
+//   if (fs.lstatSync(entryPath).isDirectory()) {
+//     fs.rmSync(entryPath, { recursive: true, force: true });
+//   } else {
+//     fs.unlinkSync(entryPath);
+//   }
+//   return true;
+// });
