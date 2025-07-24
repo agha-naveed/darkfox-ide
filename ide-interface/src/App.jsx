@@ -21,22 +21,22 @@ export default function App() {
 
   // Open a file
   const openFile = async (filePath) => {
-    if (!filePath) return;
+    console.log("Opening file:", filePath); // Debug
+    const content = await ipcRenderer.invoke("read-file", filePath);
+    console.log("File content:", content); // Debug
 
-    // Read file content via IPC
-    const content = await window.Electron.fs.readFile(filePath, 'utf-8');
     const name = filePath.split(/[/\\]/).pop();
 
-    // If already open → switch to it
-    const existingTab = openFiles.find((f) => f.path === filePath);
-    if (existingTab) {
-      setActiveFile(existingTab);
+    // Prevent duplicate tabs
+    const existing = openFiles.find(f => f.path === filePath);
+    if (existing) {
+      setActiveFile(existing);
       setFileContent(content);
       return;
     }
 
     const newTab = { name, path: filePath, saved: true };
-    setOpenFiles((prev) => [...prev, newTab]);
+    setOpenFiles(prev => [...prev, newTab]);
     setActiveFile(newTab);
     setFileContent(content);
   };
@@ -174,7 +174,7 @@ export default function App() {
           Open Folder
         </button>
         {/* <FileExplorer tree={tree} onFileClick={openFile} /> */}
-        <FileExplorer tree={tree} onFileClick={(node) => openFile(node.path)} refreshTree={() => buildTreeAgain()} />
+        <FileExplorer tree={tree} onFileClick={openFile} refreshTree={() => buildTreeAgain()} />
       </div>
 
       {/* Main area */}

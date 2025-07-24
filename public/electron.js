@@ -61,8 +61,9 @@ ipcMain.handle("open-folder", async () => {
 });
 
   ipcMain.handle('read-file', async (_, filePath) => {
+    console.log("\n\n\nread-file called:", filePath, "\n\n\n\n\n");
     try {
-      return await fs.readFile(filePath, 'utf-8');
+      return fs.readFileSync(filePath, 'utf-8');
     } catch (error) {
       console.error('Error reading file:', error);
       return '';
