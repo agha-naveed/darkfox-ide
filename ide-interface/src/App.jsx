@@ -11,11 +11,17 @@ export default function App() {
   const [editorInstance, setEditorInstance] = useState(null);
 
   // Open a folder
+  // const openFolder = async () => {
+  //   const dirHandle = await window.showDirectoryPicker();
+  //   const treeData = await buildTree(dirHandle);
+  //   setTree(treeData);
+  // };
   const openFolder = async () => {
-    const dirHandle = await window.showDirectoryPicker();
-    const treeData = await buildTree(dirHandle);
-    setTree(treeData);
+    const { ipcRenderer } = window.require("electron");
+    const result = await ipcRenderer.invoke("open-folder");
+    if (result) setTree(result.tree);
   };
+
 
   // Open a file
   const openFile = async (fileHandle) => {

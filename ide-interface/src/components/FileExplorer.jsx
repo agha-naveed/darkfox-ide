@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaFolder, FaFolderOpen, FaFileCode } from "react-icons/fa";
 
+const { ipcRenderer } = window.require("electron");
+
 export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   const [expanded, setExpanded] = useState({});
   const [contextMenu, setContextMenu] = useState(null);
@@ -23,10 +25,10 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   const handleNewFile = async () => {
     try {
       if (contextMenu?.node.kind !== "directory") return;
-      const newHandle = await contextMenu.node.handle.getFileHandle(
-        `NewFile-${Date.now()}.txt`,
-        { create: true }
-      );
+      await ipcRenderer.invoke("create-new-file", {
+        dirPath: contextMenu.node.path,
+        name: `NewFile-${Date.now()}.txt`,
+      });
       await refreshTree();
     } catch (err) {
       console.error("New file error:", err);
@@ -37,8 +39,9 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   const handleNewFolder = async () => {
     try {
       if (contextMenu?.node.kind !== "directory") return;
-      await contextMenu.node.handle.getDirectoryHandle(`NewFolder-${Date.now()}`, {
-        create: true,
+      await ipcRenderer.invoke("create-new-folder", {
+        dirPath: contextMenu.node.path,
+        name: `NewFolder-${Date.now()}`,
       });
       await refreshTree();
     } catch (err) {
@@ -51,22 +54,10 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
     try {
       const newName = prompt("Enter new name:", contextMenu.node.name);
       if (!newName || newName === contextMenu.node.name) return;
-
-      const parentDir = contextMenu.node.handle._parent;
-      if (!parentDir) return alert("Rename not supported for this handle.");
-
-      // Get file data
-      const file = await contextMenu.node.handle.getFile();
-      const newHandle = await parentDir.getFileHandle(newName, { create: true });
-
-      // Copy content
-      const writable = await newHandle.createWritable();
-      await writable.write(await file.text());
-      await writable.close();
-
-      // Delete old file
-      await parentDir.removeEntry(contextMenu.node.name);
-
+      await ipcRenderer.invoke("rename-entry", {
+        oldPath: contextMenu.node.path,
+        newName,
+      });
       await refreshTree();
     } catch (err) {
       console.error("Rename error:", err);
@@ -78,11 +69,7 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
     try {
       const confirmed = confirm(`Delete "${contextMenu.node.name}"?`);
       if (!confirmed) return;
-
-      const parentDir = contextMenu.node.handle._parent;
-      if (!parentDir) return alert("Delete not supported for this handle.");
-
-      await parentDir.removeEntry(contextMenu.node.name, { recursive: true });
+      await ipcRenderer.invoke("delete-entry", contextMenu.node.path);
       await refreshTree();
     } catch (err) {
       console.error("Delete error:", err);
@@ -98,10 +85,10 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
       if (node.kind === "file") {
         return (
           <div
-            key={path}
+            key={node.path}
             onContextMenu={(e) => handleContextMenu(e, node)}
             className="ml-4 flex items-center gap-2 cursor-pointer hover:bg-gray-700 px-1 py-0.5 rounded text-sm truncate"
-            onClick={() => onFileClick(node.handle)}
+            onClick={() => onFileClick(node.path)}
           >
             <FaFileCode className="text-blue-400" />
             {node.name}
@@ -109,30 +96,8 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
         );
       }
 
-      async function buildTree(dirHandle, parent = null) {
-        const result = [];
-        for await (const entry of dirHandle.values()) {
-          if (entry.kind === "directory") {
-            const children = await buildTree(entry, entry);
-            result.push({
-              name: entry.name,
-              kind: entry.kind,
-              handle: Object.assign(entry, { _parent: dirHandle }),
-              children,
-            });
-          } else {
-            result.push({
-              name: entry.name,
-              kind: entry.kind,
-              handle: Object.assign(entry, { _parent: dirHandle }),
-            });
-          }
-        }
-        return result;
-      }
-      
       return (
-        <div key={path} className="ml-2">
+        <div key={node.path} className="ml-2">
           <div
             onContextMenu={(e) => handleContextMenu(e, node)}
             className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 px-1 py-0.5 rounded text-sm truncate"
@@ -169,7 +134,7 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
         {renderTree(tree)}
       </div>
 
-      {/* Context Menu (Overlay) */}
+      {/* Context Menu */}
       {contextMenu && (
         <div
           style={{
@@ -181,10 +146,18 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
           className="bg-gray-800 text-white rounded shadow-lg p-2 w-40 z-[99999]"
           onMouseLeave={() => setContextMenu(null)}
         >
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFile}>New File</div>
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFolder}>New Folder</div>
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleRename}>Rename</div>
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer text-red-400" onClick={handleDelete}>Delete</div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFile}>
+            New File
+          </div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFolder}>
+            New Folder
+          </div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleRename}>
+            Rename
+          </div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer text-red-400" onClick={handleDelete}>
+            Delete
+          </div>
         </div>
       )}
     </>
