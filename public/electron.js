@@ -72,7 +72,7 @@ ipcMain.handle("open-folder", async () => {
 
   ipcMain.handle('save-file', async (_, { filePath, content }) => {
     try {
-      await fs.writeFile(filePath, content);
+      await fs.writeFileSync(filePath, content, "utf8");
       return { success: true };
     } catch (error) {
       console.error('Error saving file:', error);
@@ -80,11 +80,12 @@ ipcMain.handle("open-folder", async () => {
     }
   });
 
-  ipcMain.handle('create-new-file', async (_, { dirPath, name }) => {
-    const fullPath = path.join(dirPath, name);
-    await fs.writeFile(fullPath, '');
-    return fullPath;
-  });
+ ipcMain.handle("create-new-file", async (_, { dirPath, name, type }) => {
+  const targetDir = type === "directory" ? dirPath : path.dirname(dirPath);
+  const fullPath = path.join(targetDir, name);
+  fs.writeFileSync(fullPath, "", "utf8");
+  return fullPath;
+});
 
   ipcMain.handle('create-new-folder', async (_, { dirPath, name }) => {
     const fullPath = path.join(dirPath, name);

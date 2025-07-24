@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaFolder, FaFolderOpen, FaFileCode } from "react-icons/fa";
-// import { ipcRenderer } from "electron";
 
-// const { ipcRenderer } = window.require("electron");
-// import { ipcRenderer } from "electron";
-// const ipcRenderer = window.api
 
 export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   const [expanded, setExpanded] = useState({});
@@ -26,17 +22,27 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
 
   // === Menu Actions ===
   const handleNewFile = async () => {
-    try {
-      const newPath = window.Electron.path.join(
-        contextMenu.node.path,
-        `NewFile-${Date.now()}.txt`
-      );
-      // await window.Electron.fs.writeFile(newPath, '');
-      await window.api.saveFile(`${contextMenu.node.path}/NewFile-${Date.now()}.txt`, "");
-      refreshTree();
-    } catch (err) {
-      console.error("New file error:", err);
-    }
+    // try {
+    //   const newPath = window.Electron.path.join(
+    //     contextMenu.node.path,
+    //     `NewFile-${Date.now()}.txt`
+    //   );
+    //   // await window.Electron.fs.writeFile(newPath, '');
+    //   await window.api.saveFile(`${contextMenu.node.path}/NewFile-${Date.now()}.txt`, "");
+    //   refreshTree();
+    // } catch (err) {
+    //   console.error("New file error:", err);
+    // }
+    // setContextMenu(null);
+    const name = `NewFile-${Date.now()}.txt`;
+    const dirPath =
+      contextMenu.node.kind === "directory"
+        ? contextMenu.node.path
+        : contextMenu.node.path.replace(/[/\\][^/\\]+$/, ""); // remove filename
+
+    // await window.api.createFile(dirPath, name);
+    await window.api.createFile(contextMenu.node.path, name, contextMenu.node.kind);
+    await refreshTree();
     setContextMenu(null);
   };
 

@@ -48,7 +48,7 @@ export default function App() {
   const switchTab = async (file) => {
     setActiveFile(file);
     if (file.path) {
-      const content = await ipcRenderer.invoke("read-file", file.path);
+      const content = await window.api.readFile(file.path)
       setFileContent(content);
     }
   };
@@ -131,7 +131,11 @@ export default function App() {
       }
       if (e.ctrlKey && e.key.toLowerCase() === "s") {
         e.preventDefault();
-        if (activeFile) saveFile(fileContent);
+        if (activeFile) {
+          window.api.saveFile(activeFile.path, fileContent);
+          // saveFile(fileContent);
+        }
+          
       }
     };
     document.addEventListener("keydown", handleKeyDown);
