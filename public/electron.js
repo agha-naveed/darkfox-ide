@@ -11,6 +11,7 @@ app.on("ready", () => {
     webPreferences: {
       nodeIntegration: true,   // Allow window.require in React
       contextIsolation: false,
+      webSecurity: false
     },
   });
 
