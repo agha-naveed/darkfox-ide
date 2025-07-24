@@ -17,7 +17,7 @@ export default function CodeEditor({ content, setContent, language, onSave, setE
     <div className="flex-1 relative">
       <Editor
         height="100%"
-        language={language || "plaintext"}
+        language={language}
         theme="vs-dark"
         value={content}
         onChange={(val) => setContent(val)}
@@ -28,15 +28,13 @@ export default function CodeEditor({ content, setContent, language, onSave, setE
           minimap: { enabled: true },
         }}
         onMount={(editor, monaco) => {
-          // Save editor instance for StatusBar
-          if (setEditorInstance) setEditorInstance(editor);
-
-          // Bind Ctrl+S for save
+          // Bind Ctrl+S inside Monaco
           editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-            if (onSave) onSave(content);
+            if (onSave) onSave();
           });
         }}
       />
+
     </div>
   );
 }

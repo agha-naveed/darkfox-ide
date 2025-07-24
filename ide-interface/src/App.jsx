@@ -22,24 +22,23 @@ export default function App() {
 
   // Open a file
   const openFile = async (filePath) => {
-    console.log("Opening file:", filePath); // Debug
+    console.log("Opening file:", filePath);
     const content = await window.api.readFile(filePath);
-    console.log("File content:", content); // Debug
+    console.log("File content:", content);
 
     const name = filePath.split(/[/\\]/).pop();
 
     // Prevent duplicate tabs
-    const existing = openFiles.find(f => f.path === filePath);
+    const existing = openFiles.find((f) => f.path === filePath);
     if (existing) {
       setActiveFile(existing);
-      setFileContent(content);
       return;
     }
 
-    const newTab = { name, path: filePath, saved: true };
-    setOpenFiles(prev => [...prev, newTab]);
+    // Attach content to tab
+    const newTab = { name, path: filePath, content, saved: true };
+    setOpenFiles((prev) => [...prev, newTab]);
     setActiveFile(newTab);
-    setFileContent(content);
   };
 
 
@@ -75,7 +74,7 @@ export default function App() {
   // Create new file
   const newFile = () => {
     const name = `Untitled-${openFiles.length + 1}.txt`;
-    const newTab = { name, handle: null, saved: false };
+    const newTab = { name, path: null, saved: false, content: "" };
     setOpenFiles((prev) => [...prev, newTab]);
     setActiveFile(newTab);
     setFileContent("");
@@ -131,13 +130,19 @@ export default function App() {
       }
       if (e.ctrlKey && e.key.toLowerCase() === "s") {
         e.preventDefault();
-        if (activeFile) {
-          window.api.saveFile(activeFile.path, fileContent);
-          // saveFile(fileContent);
+        if (activeFile?.path) {
+          window.api.saveFile(activeFile.path, activeFile.content);
+          // Mark as saved
+          setOpenFiles((files) =>
+            files.map((f) =>
+              f.path === activeFile.path ? { ...f, saved: true } : f
+            )
+          );
+          setActiveFile((prev) => ({ ...prev, saved: true }));
         }
-          
-      }
-    };
+      };
+    }
+      
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [openFiles, activeFile, fileContent]);
@@ -171,10 +176,10 @@ export default function App() {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-zinc-900 text-white p-2">
+      <div className="w-64 bg-zinc-900 text-white p-2 border-r border-r-zinc-700">
         <button
           onClick={openFolder}
-          className="w-full bg-blue-600 py-[6px] cursor-pointer transition-all hover:bg-blue-800 rounded mb-2"
+          className="w-full bg-blue-600 text-[14px] py-[6px] cursor-pointer transition-all hover:bg-blue-800 rounded mb-2"
         >
           Open Folder
         </button>
@@ -219,17 +224,30 @@ export default function App() {
         {/* Editor */}
         {activeFile ? (
           <CodeEditor
-            content={fileContent}
+            content={activeFile?.content || ""}
             setEditorInstance={setEditorInstance}
             setContent={(val) => {
-              setFileContent(val);
-              setOpenFiles((prev) =>
-                prev.map((f) =>
-                  f.name === activeFile.name ? { ...f, saved: false } : f
+              // Update the correct tab by path (not object equality)
+              setOpenFiles((files) =>
+                files.map((f) =>
+                  f.path === activeFile.path ? { ...f, content: val, saved: false } : f
                 )
               );
+
+              // Update active file content
+              setActiveFile((prev) => ({ ...prev, content: val, saved: false }));
             }}
-            onSave={() => ipcRenderer.invoke("save-file", { filePath: activeFile.path, content: fileContent })}
+            onSave={() => {
+              if (activeFile?.path) {
+                window.api.saveFile(activeFile.path, activeFile.content);
+                setOpenFiles((files) =>
+                  files.map((f) =>
+                    f.path === activeFile.path ? { ...f, saved: true } : f
+                  )
+                );
+                setActiveFile((prev) => ({ ...prev, saved: true }));
+              }
+            }}
             language={getLanguageFromExtension(activeFile?.name)}
           />
         ) : (
