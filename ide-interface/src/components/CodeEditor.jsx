@@ -1,6 +1,14 @@
-import Editor from "@monaco-editor/react";
+import Editor, { loader } from "@monaco-editor/react";
+import { useEffect } from "react";
+
+// loader.config({ paths: { vs: '/vs' } });
+const monacoBaseUrl = `${window.location.origin}/vs`;
+loader.config({ paths: { vs: monacoBaseUrl } });
 
 export default function CodeEditor({ content, setContent, language, onSave, setEditorInstance }) {
+  useEffect(() => {
+    console.log("Monaco loading from:", window.location.origin + '/vs');
+  }, []);
   return (
     <div className="flex-1 relative">
       <Editor

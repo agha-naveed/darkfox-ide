@@ -174,7 +174,7 @@ export default function App() {
           Open Folder
         </button>
         {/* <FileExplorer tree={tree} onFileClick={openFile} /> */}
-        <FileExplorer tree={tree} onFileClick={openFile} refreshTree={() => buildTreeAgain()} />
+        <FileExplorer tree={tree} onFileClick={(node) => openFile(node)} refreshTree={() => buildTreeAgain()} />
       </div>
 
       {/* Main area */}
