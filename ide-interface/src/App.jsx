@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import FileExplorer from "./components/FileExplorer";
 import CodeEditor from "./components/CodeEditor";
 import StatusBar from "./components/StatusBar";
-const { ipcRenderer } = window.require("electron");
+// const ipcRenderer = window.api
+
 
 export default function App() {
   const [tree, setTree] = useState([]);
@@ -12,7 +13,7 @@ export default function App() {
   const [editorInstance, setEditorInstance] = useState(null);
 
   const openFolder = async () => {
-    const result = await ipcRenderer.invoke('open-folder');
+    const result = await window.api.openFolder();
     if (result)   setTree(result.tree);
 
     console.log(result);
@@ -22,7 +23,7 @@ export default function App() {
   // Open a file
   const openFile = async (filePath) => {
     console.log("Opening file:", filePath); // Debug
-    const content = await ipcRenderer.invoke("read-file", filePath);
+    const content = await window.api.readFile(filePath);
     console.log("File content:", content); // Debug
 
     const name = filePath.split(/[/\\]/).pop();

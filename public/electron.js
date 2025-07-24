@@ -14,9 +14,9 @@ app.on("ready", () => {
     width: 1200,
     height: 800,
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,   // Allow window.require in React
-      contextIsolation: false,
+      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+      nodeIntegration: false,   // Allow window.require in React
       // webSecurity: false
     },
   });

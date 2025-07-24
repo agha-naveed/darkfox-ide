@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaFolder, FaFolderOpen, FaFileCode } from "react-icons/fa";
+// import { ipcRenderer } from "electron";
 
-const { ipcRenderer } = window.require("electron");
+// const { ipcRenderer } = window.require("electron");
+// import { ipcRenderer } from "electron";
+// const ipcRenderer = window.api
 
 export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   const [expanded, setExpanded] = useState({});
@@ -28,7 +31,8 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
         contextMenu.node.path,
         `NewFile-${Date.now()}.txt`
       );
-      await window.Electron.fs.writeFile(newPath, '');
+      // await window.Electron.fs.writeFile(newPath, '');
+      await window.api.saveFile(`${contextMenu.node.path}/NewFile-${Date.now()}.txt`, "");
       refreshTree();
     } catch (err) {
       console.error("New file error:", err);
