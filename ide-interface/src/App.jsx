@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import FileExplorer from "./components/FileExplorer";
 import CodeEditor from "./components/CodeEditor";
 import StatusBar from "./components/StatusBar";
+const { ipcRenderer } = window.require("electron");
 
 export default function App() {
   const [tree, setTree] = useState([]);
@@ -17,9 +18,8 @@ export default function App() {
   //   setTree(treeData);
   // };
   const openFolder = async () => {
-    const { ipcRenderer } = window.require("electron");
-    // const result = await ipcRenderer.invoke("open-folder");
-    const result = await window.api.openFolder();
+    const result = await ipcRenderer.invoke("open-folder");
+    // const result = await window.api.openFolder();
     console.log(result);
     if (result) setTree(result.tree);
   };
@@ -28,7 +28,9 @@ export default function App() {
   // Open a file
   const openFile = async (filePath) => {
   // Ensure filePath is a string
-  const content = await window.api.readFile(filePath);
+  if(!filePath) return;
+  
+  const content = await ipcRenderer.invoke("read-file", filePath);
   const name = filePath.split(/[/\\]/).pop();
 
   // If already open → switch to it
@@ -39,7 +41,6 @@ export default function App() {
     return;
   }
 
-  // Otherwise → add new tab
   const newTab = { name, path: filePath, saved: true };
   setOpenFiles((prev) => [...prev, newTab]);
   setActiveFile(newTab);
