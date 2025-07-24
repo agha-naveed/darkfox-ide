@@ -10,10 +10,8 @@ contextBridge.exposeInMainWorld("api", {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Title bar implementation
   new Titlebar({
-    backgroundColor: '#202020',
-    icon: 'path/to/icon.png',
-    menu: yourElectronMenu,
+    icon: 'https://agha-naveed.github.io/portfolio/img/my-logo.webp',
+    
   });
 });

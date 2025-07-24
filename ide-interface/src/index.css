@@ -13,29 +13,3 @@ html {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
-.title-bar {
-  -webkit-app-region: drag;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 30px;
-  background-color: #222;
-  color: white;
-  padding: 0 10px;
-}
-
-.title-bar-controls button {
-  -webkit-app-region: no-drag;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 14px;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-.title-bar-controls {
-  display: flex;
-  align-items: center;
-}
