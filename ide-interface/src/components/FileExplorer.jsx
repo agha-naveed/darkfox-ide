@@ -8,72 +8,50 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   const [expanded, setExpanded] = useState({});
   const [contextMenu, setContextMenu] = useState(null);
 
-  const toggle = (path) => {
-    setExpanded((prev) => ({ ...prev, [path]: !prev[path] }));
-  };
+  const toggle = (path) => setExpanded((prev) => ({ ...prev, [path]: !prev[path] }));
 
   const handleContextMenu = (e, node) => {
     e.preventDefault();
-    setContextMenu({
-      x: e.clientX,
-      y: e.clientY,
-      node,
-    });
+    setContextMenu({ x: e.clientX, y: e.clientY, node });
   };
 
   // === Menu Actions ===
   const handleNewFile = async () => {
-    try {
-      if (contextMenu?.node.kind !== "directory") return;
-      await ipcRenderer.invoke("create-new-file", {
-        dirPath: contextMenu.node.path,
-        name: `NewFile-${Date.now()}.txt`,
-      });
-      await refreshTree();
-    } catch (err) {
-      console.error("New file error:", err);
-    }
+    if (contextMenu?.node.kind !== "directory") return;
+    await ipcRenderer.invoke("create-new-file", {
+      dirPath: contextMenu.node.path,
+      name: `NewFile-${Date.now()}.txt`,
+    });
+    await refreshTree();
     setContextMenu(null);
   };
 
   const handleNewFolder = async () => {
-    try {
-      if (contextMenu?.node.kind !== "directory") return;
-      await ipcRenderer.invoke("create-new-folder", {
-        dirPath: contextMenu.node.path,
-        name: `NewFolder-${Date.now()}`,
-      });
-      await refreshTree();
-    } catch (err) {
-      console.error("New folder error:", err);
-    }
+    if (contextMenu?.node.kind !== "directory") return;
+    await ipcRenderer.invoke("create-new-folder", {
+      dirPath: contextMenu.node.path,
+      name: `NewFolder-${Date.now()}`,
+    });
+    await refreshTree();
     setContextMenu(null);
   };
 
   const handleRename = async () => {
-    try {
-      const newName = prompt("Enter new name:", contextMenu.node.name);
-      if (!newName || newName === contextMenu.node.name) return;
-      await ipcRenderer.invoke("rename-entry", {
-        oldPath: contextMenu.node.path,
-        newName,
-      });
-      await refreshTree();
-    } catch (err) {
-      console.error("Rename error:", err);
-    }
+    const newName = prompt("Enter new name:", contextMenu.node.name);
+    if (!newName || newName === contextMenu.node.name) return;
+    await ipcRenderer.invoke("rename-entry", {
+      oldPath: contextMenu.node.path,
+      newName,
+    });
+    await refreshTree();
     setContextMenu(null);
   };
 
   const handleDelete = async () => {
-    try {
-      const confirmed = confirm(`Delete "${contextMenu.node.name}"?`);
-      if (!confirmed) return;
-      await ipcRenderer.invoke("delete-entry", contextMenu.node.path);
-      await refreshTree();
-    } catch (err) {
-      console.error("Delete error:", err);
-    }
+    const confirmed = confirm(`Delete "${contextMenu.node.name}"?`);
+    if (!confirmed) return;
+    await ipcRenderer.invoke("delete-entry", contextMenu.node.path);
+    await refreshTree();
     setContextMenu(null);
   };
 
@@ -103,11 +81,7 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
             className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 px-1 py-0.5 rounded text-sm truncate"
             onClick={() => toggle(path)}
           >
-            {isOpen ? (
-              <FaFolderOpen className="text-yellow-400" />
-            ) : (
-              <FaFolder className="text-yellow-500" />
-            )}
+            {isOpen ? <FaFolderOpen className="text-yellow-400" /> : <FaFolder className="text-yellow-500" />}
             {node.name}
           </div>
           <AnimatePresence>
@@ -129,35 +103,20 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
 
   return (
     <>
-      {/* Sidebar content */}
       <div className="overflow-y-auto h-full pr-1 custom-scroll relative">
         {renderTree(tree)}
       </div>
 
-      {/* Context Menu */}
       {contextMenu && (
         <div
-          style={{
-            position: "fixed",
-            top: contextMenu.y,
-            left: contextMenu.x,
-            minWidth: "150px",
-          }}
+          style={{ position: "fixed", top: contextMenu.y, left: contextMenu.x, minWidth: "150px" }}
           className="bg-gray-800 text-white rounded shadow-lg p-2 w-40 z-[99999]"
           onMouseLeave={() => setContextMenu(null)}
         >
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFile}>
-            New File
-          </div>
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFolder}>
-            New Folder
-          </div>
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleRename}>
-            Rename
-          </div>
-          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer text-red-400" onClick={handleDelete}>
-            Delete
-          </div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFile}>New File</div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleNewFolder}>New Folder</div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer" onClick={handleRename}>Rename</div>
+          <div className="px-2 py-1 hover:bg-gray-700 cursor-pointer text-red-400" onClick={handleDelete}>Delete</div>
         </div>
       )}
     </>

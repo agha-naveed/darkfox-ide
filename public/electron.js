@@ -62,10 +62,12 @@ ipcMain.handle("open-folder", async () => {
   return { tree: buildTree(folderPath), rootPath: folderPath };
 });
 
+// Read File
 ipcMain.handle("read-file", async (_, filePath) => {
   return fs.readFileSync(filePath, "utf8");
 });
 
+// Save File
 ipcMain.handle("save-file", async (_, { filePath, content }) => {
   fs.writeFileSync(filePath, content, "utf8");
   return true;

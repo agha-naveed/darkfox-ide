@@ -29,12 +29,28 @@ export default function App() {
   const openFile = async (filePath) => {
   // Ensure filePath is a string
   if(!filePath) return;
-  
-  const content = await ipcRenderer.invoke("read-file", filePath);
-  const name = filePath.split(/[/\\]/).pop();
+
+  // const content = await ipcRenderer.invoke("read-file", filePath);
+  let content = await window.Electron.ipcRenderer.invoke("read-file", filePath);
+
+  let name = filePath.split(/[/\\]/).pop();
 
   // If already open → switch to it
   const existingTab = openFiles.find((f) => f.path === filePath);
+
+
+  if (typeof file === "string" || file.path) {
+    filePath = typeof file === "string" ? file : file.path;
+    content = await ipcRenderer.invoke("read-file", filePath); // <-- direct call
+    name = filePath.split(/[/\\]/).pop();
+  } else {
+    const f = await file.getFile();
+    content = await f.text();
+    name = file.name;
+    filePath = null;
+  }
+  console.log("Opened file:", { filePath, contentLength: content?.length });
+
   if (existingTab) {
     setActiveFile(existingTab);
     setFileContent(content);
@@ -218,8 +234,8 @@ export default function App() {
         {/* Editor */}
         {activeFile ? (
           <CodeEditor
-            setEditorInstance={setEditorInstance}
             content={fileContent}
+            setEditorInstance={setEditorInstance}
             setContent={(val) => {
               setFileContent(val);
               setOpenFiles((prev) =>
@@ -228,7 +244,7 @@ export default function App() {
                 )
               );
             }}
-            onSave={() => saveFile(fileContent)}
+            onSave={() => ipcRenderer.invoke("save-file", { filePath: activeFile.path, content: fileContent })}
             language={getLanguageFromExtension(activeFile?.name)}
           />
         ) : (
