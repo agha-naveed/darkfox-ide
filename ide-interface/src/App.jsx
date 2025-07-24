@@ -24,24 +24,36 @@ export default function App() {
 
 
   // Open a file
-  const openFile = async (fileHandle) => {
-    const file = await fileHandle.getFile();
-    const content = await file.text();
+  const openFile = async (file) => {
+  let content;
+  let name;
 
-    // If already open → switch to it
-    const existingTab = openFiles.find((f) => f.name === fileHandle.name);
-    if (existingTab) {
-      setActiveFile(existingTab);
-      setFileContent(content);
-      return;
-    }
+  if (window.electronAPI) {
+    // Electron mode → file is a path
+    content = await window.electronAPI.readFile(file);
+    name = file.split(/[/\\]/).pop(); // Extract filename
+  } else {
+    // Browser mode → file is a handle
+    const f = await file.getFile();
+    content = await f.text();
+    name = file.name;
+  }
 
-    // Otherwise → add new tab
-    const newTab = { name: fileHandle.name, handle: fileHandle, saved: true };
-    setOpenFiles((prev) => [...prev, newTab]);
-    setActiveFile(newTab);
+  // If already open → switch to it
+  const existingTab = openFiles.find((f) => f.name === name);
+  if (existingTab) {
+    setActiveFile(existingTab);
     setFileContent(content);
-  };
+    return;
+  }
+
+  // Otherwise → add new tab
+  const newTab = { name, handle: file, saved: true };
+  setOpenFiles((prev) => [...prev, newTab]);
+  setActiveFile(newTab);
+  setFileContent(content);
+};
+
 
   // Switch tab
   const switchTab = async (file) => {
