@@ -12,5 +12,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "electron": "^37.2.4",
+    "electron-builder": "^26.0.12",
+    "wait-on": "^8.0.4"
+  }
 }
