@@ -24,12 +24,12 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   // === Menu Actions ===
   const handleNewFile = async () => {
     try {
-      if (contextMenu?.node.kind !== "directory") return;
-      await ipcRenderer.invoke("create-new-file", {
-        dirPath: contextMenu.node.path,
-        name: `NewFile-${Date.now()}.txt`,
-      });
-      await refreshTree();
+      const newPath = window.Electron.path.join(
+        contextMenu.node.path,
+        `NewFile-${Date.now()}.txt`
+      );
+      await window.Electron.fs.writeFile(newPath, '');
+      refreshTree();
     } catch (err) {
       console.error("New file error:", err);
     }

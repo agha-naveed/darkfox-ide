@@ -1,9 +1,12 @@
-// public/preload.js
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld("api", {
-  openFolder: () => ipcRenderer.invoke("open-folder"),
-  readFile: (filePath) => ipcRenderer.invoke("read-file", filePath),
-  saveFile: (filePath, content) => ipcRenderer.invoke("save-file", { filePath, content }),
-  saveFileAs: (content) => ipcRenderer.invoke("save-file-as", content),
+contextBridge.exposeInMainWorld('Electron', {
+  ipcRenderer: {
+    invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
+    on: (channel, listener) => ipcRenderer.on(channel, listener),
+    removeListener: (channel, listener) => ipcRenderer.removeListener(channel, listener),
+  },
+  openFolder: () => ipcRenderer.invoke('open-folder'),
+  readFile: (path) => ipcRenderer.invoke('read-file', path),
+  saveFile: (data) => ipcRenderer.invoke('save-file', data),
 });

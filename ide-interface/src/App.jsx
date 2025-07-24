@@ -18,7 +18,8 @@ export default function App() {
   //   setTree(treeData);
   // };
   const openFolder = async () => {
-    const result = await ipcRenderer.invoke("open-folder");
+    // const result = await ipcRenderer.invoke("open-folder");
+    const result = await ipcRenderer.invoke('open-folder');
     // const result = await window.api.openFolder();
     console.log(result);
     if (result) setTree(result.tree);
@@ -27,50 +28,35 @@ export default function App() {
 
   // Open a file
   const openFile = async (filePath) => {
-  // Ensure filePath is a string
-  if(!filePath) return;
+    if (!filePath) return;
 
-  // const content = await ipcRenderer.invoke("read-file", filePath);
-  let content = await window.Electron.ipcRenderer.invoke("read-file", filePath);
+    // Read file content via IPC
+    const content = await window.Electron.fs.readFile(filePath, 'utf-8');
+    const name = filePath.split(/[/\\]/).pop();
 
-  let name = filePath.split(/[/\\]/).pop();
+    // If already open → switch to it
+    const existingTab = openFiles.find((f) => f.path === filePath);
+    if (existingTab) {
+      setActiveFile(existingTab);
+      setFileContent(content);
+      return;
+    }
 
-  // If already open → switch to it
-  const existingTab = openFiles.find((f) => f.path === filePath);
-
-
-  if (typeof file === "string" || file.path) {
-    filePath = typeof file === "string" ? file : file.path;
-    content = await ipcRenderer.invoke("read-file", filePath); // <-- direct call
-    name = filePath.split(/[/\\]/).pop();
-  } else {
-    const f = await file.getFile();
-    content = await f.text();
-    name = file.name;
-    filePath = null;
-  }
-  console.log("Opened file:", { filePath, contentLength: content?.length });
-
-  if (existingTab) {
-    setActiveFile(existingTab);
+    const newTab = { name, path: filePath, saved: true };
+    setOpenFiles((prev) => [...prev, newTab]);
+    setActiveFile(newTab);
     setFileContent(content);
-    return;
-  }
-
-  const newTab = { name, path: filePath, saved: true };
-  setOpenFiles((prev) => [...prev, newTab]);
-  setActiveFile(newTab);
-  setFileContent(content);
-};
+  };
 
 
 
   // Switch tab
   const switchTab = async (file) => {
     setActiveFile(file);
-    const openedFile = await file.handle.getFile();
-    const content = await openedFile.text();
-    setFileContent(content);
+    if (file.path) {
+      const content = await ipcRenderer.invoke("read-file", file.path);
+      setFileContent(content);
+    }
   };
 
   // Close tab
@@ -161,7 +147,8 @@ export default function App() {
   // Get language based on file extension
   const getLanguageFromExtension = (name) => {
     if (!name) return "plaintext";
-    const ext = name.split(".").pop();
+  const ext = name.includes('.') ? name.split(".").pop() : "";
+  // ... rest remains the same
     switch (ext) {
       case "js":
       case "mjs":
