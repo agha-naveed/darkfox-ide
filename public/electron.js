@@ -2,9 +2,10 @@ const { app, BrowserWindow, ipcMain, dialog, protocol } = require("electron");
 // const path = require("path");
 const fs = require("fs");
 const path = require('path');
+const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 // const fs = require('fs').promises;
 
-
+setupTitlebar();
 let mainWindow;
 
 app.on("ready", () => {
@@ -13,10 +14,14 @@ app.on("ready", () => {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: true,
     webPreferences: {
+      sandbox: false,
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,   // Allow window.require in React
+      
       // webSecurity: false
     },
   });
