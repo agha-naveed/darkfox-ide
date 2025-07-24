@@ -115,7 +115,7 @@ export default function App() {
 
   // Keyboard shortcuts
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = async (e) => {
       if (e.ctrlKey && e.key === "Tab") {
         e.preventDefault();
         cycleTab(!e.shiftKey);
@@ -128,6 +128,23 @@ export default function App() {
         e.preventDefault();
         newFile();
       }
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        if (!activeFile) return;
+
+        // Always Save As
+        const newPath = await window.api.saveFileAs(activeFile.content);
+        if (newPath) {
+          const name = newPath.split(/[/\\]/).pop();
+          setOpenFiles((files) =>
+            files.map((f) =>
+              f.path === activeFile.path ? { ...f, path: newPath, name, saved: true } : f
+            )
+          );
+          setActiveFile((prev) => ({ ...prev, path: newPath, name, saved: true }));
+        }
+      }
+
       if (e.ctrlKey && e.key.toLowerCase() === "s") {
         e.preventDefault();
         if (activeFile?.path) {
@@ -241,10 +258,8 @@ export default function App() {
               if (!activeFile) return;
 
               if (activeFile.path) {
-                // Save to existing path
                 await window.api.saveFile(activeFile.path, activeFile.content);
               } else {
-                // Fallback to Save As for new files
                 const newPath = await window.api.saveFileAs(activeFile.content);
                 if (newPath) {
                   const name = newPath.split(/[/\\]/).pop();

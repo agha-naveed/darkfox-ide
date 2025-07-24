@@ -71,17 +71,28 @@ ipcMain.handle("open-folder", async () => {
   });
 
   ipcMain.handle('save-file', async (_, { filePath, content }) => {
-  console.log('SAVE FILE CALLED:', filePath);
-  console.log('CONTENT:', content);
-  try {
-    fs.writeFileSync(filePath, content, "utf8");
-    return { success: true };
-  } catch (error) {
-    console.error('Error saving file:', error);
-    return { success: false };
-  }
-});
+    console.log('SAVE FILE CALLED:', filePath);
+    console.log('CONTENT:', content);
+    try {
+      fs.writeFileSync(filePath, content, "utf8");
+      return { success: true };
+    } catch (error) {
+      console.error('Error saving file:', error);
+      return { success: false };
+    }
+  });
 
+  ipcMain.handle("save-file-as", async (_, content) => {
+    const result = await dialog.showSaveDialog({
+      title: "Save File As",
+      defaultPath: "Untitled.txt",
+      filters: [{ name: "All Files", extensions: ["*"] }]
+    });
+    if (result.canceled) return null;
+
+    fs.writeFileSync(result.filePath, content, "utf8");
+    return result.filePath;
+  });
 
  ipcMain.handle("create-new-file", async (_, { dirPath, name, type }) => {
   const targetDir = type === "directory" ? dirPath : path.dirname(dirPath);

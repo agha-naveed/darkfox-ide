@@ -28,7 +28,6 @@ export default function CodeEditor({ content, setContent, language, onSave, setE
           minimap: { enabled: true },
         }}
         onMount={(editor, monaco) => {
-          // Bind Ctrl+S inside Monaco
           editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
             if (onSave) onSave();
           });
