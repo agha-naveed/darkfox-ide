@@ -29,7 +29,7 @@ export default function App() {
     const name = filePath.split(/[/\\]/).pop();
 
     // Prevent duplicate tabs
-    const existing = openFiles.find((f) => f.path === filePath);
+    const existing = openFiles.find(f => f.path === filePath);
     if (existing) {
       setActiveFile(existing);
       return;
@@ -37,7 +37,7 @@ export default function App() {
 
     // Attach content to tab
     const newTab = { name, path: filePath, content, saved: true };
-    setOpenFiles((prev) => [...prev, newTab]);
+    setOpenFiles(prev => [...prev, newTab]);
     setActiveFile(newTab);
   };
 
