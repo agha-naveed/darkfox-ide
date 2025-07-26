@@ -134,6 +134,8 @@ export default function App() {
 
         // Always Save As
         const newPath = await window.api.saveFileAs(activeFile.content);
+        if(!newPath)  return;
+        
         if (newPath) {
           const name = newPath.split(/[/\\]/).pop();
           setOpenFiles((files) =>
