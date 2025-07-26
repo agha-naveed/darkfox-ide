@@ -28,6 +28,7 @@ export default function CodeEditor({ content, setContent, language, onSave, setE
           minimap: { enabled: true },
         }}
         onMount={(editor, monaco) => {
+          setEditorInstance(editor);
           editor.addCommand(monaco.KeyMod.CtrlCmd & monaco.KeyCode.KeyS, () => {
             // if (onSave) onSave();
           });

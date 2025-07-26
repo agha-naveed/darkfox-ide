@@ -284,8 +284,9 @@ export default function App() {
               );
               setActiveFile(prev => ({ ...prev, saved: true }));
             }}
-
+            
             language={getLanguageFromExtension(activeFile?.name)}
+            
           />
 
         ) : (
