@@ -5,7 +5,7 @@
   "homepage": "./",
   "build": {
     "appId": "com.myide.app",
-    "productName": "My IDE",
+    "productName": "AI IDE",
     "directories": {
       "buildResources": "assets",
       "output": "dist"

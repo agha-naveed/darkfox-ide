@@ -45,7 +45,6 @@ app.on("ready", () => {
   // }
 
 
-  mainWindow.webContents.openDevTools();
   
   mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.webContents.executeJavaScript(`
@@ -77,7 +76,6 @@ ipcMain.handle("open-folder", async () => {
 });
 
   ipcMain.handle('read-file', async (_, filePath) => {
-    console.log("\n\n\nread-file called:", filePath, "\n\n\n\n\n");
     try {
       return fs.readFileSync(filePath, 'utf-8');
     } catch (error) {

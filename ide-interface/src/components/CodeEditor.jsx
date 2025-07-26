@@ -5,7 +5,7 @@ import { useEffect } from "react";
 // const baseURL = import.meta.env.DEV
 //   ? "http://localhost:5173/vs"
 //   : `/vs`;
-const baseURL = `${window.location.origin}/vs`
+const baseURL = `${window.location.pathname}/../vs`
 
 loader.config({ paths: { vs: baseURL } });
 
