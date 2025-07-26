@@ -12,6 +12,7 @@ export default function CodeEditor({ content, setContent, language, onSave, setE
   useEffect(() => {
     console.log("Monaco loading from:", window.location.origin + '/vs');
   }, []);
+  
 
   return (
     <div className="flex-1 relative">
