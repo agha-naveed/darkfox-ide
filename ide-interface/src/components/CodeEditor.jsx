@@ -29,10 +29,10 @@ export default function CodeEditor({ content, setContent, language, onSave, setE
         }}
         onMount={(editor, monaco) => {
           editor.addCommand(monaco.KeyMod.CtrlCmd & monaco.KeyCode.KeyS, () => {
-            if (onSave) onSave();
+            // if (onSave) onSave();
           });
           editor.addCommand(monaco.KeyMod.CtrlCmd & monaco.KeyMod.Shift & monaco.KeyCode.KeyS, () => {
-            if (onSave) onSave();
+            // if (onSave) onSave();
           });
         }}
       />

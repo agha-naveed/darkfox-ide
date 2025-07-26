@@ -260,6 +260,7 @@ export default function App() {
               // Always Save As (Ctrl+Shift+S) or new file
               if (forceSaveAs || !activeFile.path) {
                 const newPath = await window.api.saveFileAs(activeFile.content);
+                console.log("\n\n\n\n\new path "+ newPath +"\n\n\n\n")
                 if (!newPath) return; // <-- User canceled Save As → EXIT
 
                 const name = newPath.split(/[/\\]/).pop();
@@ -281,8 +282,10 @@ export default function App() {
               );
               setActiveFile(prev => ({ ...prev, saved: true }));
             }}
+
             language={getLanguageFromExtension(activeFile?.name)}
           />
+
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-400">
             Open a file to start editing
