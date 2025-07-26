@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import FileExplorer from "./components/FileExplorer";
 import CodeEditor from "./components/CodeEditor";
 import StatusBar from "./components/StatusBar";
+import AIPrompt from "./components/AIPrompt";
+
 // const ipcRenderer = window.api
 
 
