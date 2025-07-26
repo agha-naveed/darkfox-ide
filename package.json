@@ -2,12 +2,45 @@
   "name": "ide",
   "version": "1.0.0",
   "main": "public/electron.js",
+  "homepage": "./",
+  "build": {
+    "appId": "com.myide.app",
+    "productName": "My IDE",
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist"
+    },
+    "files": [
+      "public/**/*",
+      "ide-interface/dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "ide-interface/dist",
+        "to": "app"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd ide-interface && npm run dev",
     "build": "cd ide-interface && npm run build",
     "electron": "npm run build && electron .",
-    "dev": "concurrently \"npm run start\" \"wait-on http://localhost:5173 && electron .\""
+    "dev": "concurrently \"npm run start\" \"wait-on http://localhost:5173 && electron .\"",
+    "dist": "npm run build && electron-builder"
   },
   "keywords": [],
   "author": "",

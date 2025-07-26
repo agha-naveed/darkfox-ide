@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require('path');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 // const fs = require('fs').promises;
+// const path = require('path');
+
 
 setupTitlebar();
 let mainWindow;
@@ -27,12 +29,21 @@ app.on("ready", () => {
   });
 
   
+  // const isDev = !app.isPackaged;
+  // mainWindow.loadURL(
+  //   isDev ?
+  //   mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
+  //   : "http://localhost:5173"
+  // );
+
   const isDev = !app.isPackaged;
-  mainWindow.loadURL(
-    isDev
-      ? "http://localhost:5173"
-      : `file://${path.join(__dirname, "../dist/index.html")}`
-  );
+
+  if (isDev) {
+    mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  } else {
+    mainWindow.loadURL("http://localhost:5173");
+  }
+
 
   mainWindow.webContents.openDevTools();
   
