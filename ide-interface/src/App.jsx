@@ -290,7 +290,7 @@ export default function App() {
           />
 
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-400">
+          <div className="flex-1 flex items-center justify-center text-gray-400 select-none">
             Open a file to start editing
           </div>
         )}
