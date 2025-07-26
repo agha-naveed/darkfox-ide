@@ -29,8 +29,6 @@ export default function AIPrompt({ isOpen, onClose, editorInstance }) {
           ],
       });
 
-      const data = await response.json();
-      // const code = extractCode(data.choices[0].message.content);
       const code = extractCode(response?.message?.content?.[0]?.text);
 
       // Insert into Monaco

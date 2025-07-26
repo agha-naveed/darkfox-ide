@@ -8,6 +8,9 @@ import AIPrompt from "./components/AIPrompt";
 
 
 export default function App() {
+
+  const [aiOpen, setAiOpen] = useState(false);
+
   const [tree, setTree] = useState([]);
   const [openFiles, setOpenFiles] = useState([]); // open tabs
   const [activeFile, setActiveFile] = useState(null); // active tab
@@ -121,6 +124,10 @@ export default function App() {
       if (e.ctrlKey && e.key === "Tab") {
         e.preventDefault();
         cycleTab(!e.shiftKey);
+      }
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") {
+        e.preventDefault();
+        setAiOpen(true);
       }
       if (e.ctrlKey && e.key.toLowerCase() === "w") {
         e.preventDefault();
@@ -296,6 +303,8 @@ export default function App() {
             Open a file to start editing
           </div>
         )}
+        <AIPrompt isOpen={aiOpen} onClose={() => setAiOpen(false)} editorInstance={editorInstance} />
+
         <StatusBar
           fileName={activeFile?.name}
           language={activeFile ? activeFile.name.split(".").pop() : "plaintext"}
