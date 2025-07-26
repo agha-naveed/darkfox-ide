@@ -2,15 +2,18 @@ import Editor, { loader } from "@monaco-editor/react";
 import { useEffect } from "react";
 
 // loader.config({ paths: { vs: '/vs' } });
-const baseURL = import.meta.env.DEV
-  ? "http://localhost:5173/vs"
-  : `${window.location.origin}/vs`;
+// const baseURL = import.meta.env.DEV
+//   ? "http://localhost:5173/vs"
+//   : `/vs`;
+const baseURL = `${window.location.origin}/vs`
 
 loader.config({ paths: { vs: baseURL } });
 
 export default function CodeEditor({ content, setContent, language, onSave, setEditorInstance }) {
   useEffect(() => {
     console.log("Monaco loading from:", window.location.origin + '/vs');
+    console.log("location: "+baseURL)
+
   }, []);
   
 

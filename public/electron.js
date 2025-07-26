@@ -36,13 +36,13 @@ app.on("ready", () => {
   //   : "http://localhost:5173"
   // );
 
-  const isDev = !app.isPackaged;
+  // const isDev = !app.isPackaged;
 
-  if (isDev) {
-    mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
-  } else {
-    mainWindow.loadURL("http://localhost:5173");
-  }
+  // if (isDev) {
+  //   mainWindow.loadURL("http://localhost:5173");
+  // } else {
+    mainWindow.loadFile(path.join(__dirname, '..', 'ide-interface/dist', 'index.html'));
+  // }
 
 
   mainWindow.webContents.openDevTools();
