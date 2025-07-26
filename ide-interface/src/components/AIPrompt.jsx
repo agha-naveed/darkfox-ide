@@ -1,8 +1,8 @@
 import { CohereClientV2 } from 'cohere-ai';
+import { useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_KEY;
 
-import { useState } from "react";
 
 export default function AIPrompt({ isOpen, onClose, editorInstance }) {
 
