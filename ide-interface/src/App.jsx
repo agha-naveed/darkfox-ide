@@ -257,20 +257,29 @@ export default function App() {
             onSave={async () => {
               if (!activeFile) return;
 
-              if (activeFile.path) {
-                await window.api.saveFile(activeFile.path, activeFile.content);
-              } else {
+              // Always Save As (Ctrl+Shift+S) or new file
+              if (forceSaveAs || !activeFile.path) {
                 const newPath = await window.api.saveFileAs(activeFile.content);
-                if (newPath) {
-                  const name = newPath.split(/[/\\]/).pop();
-                  setOpenFiles((files) =>
-                    files.map((f) =>
-                      f === activeFile ? { ...f, path: newPath, name, saved: true } : f
-                    )
-                  );
-                  setActiveFile({ ...activeFile, path: newPath, name, saved: true });
-                }
+                if (!newPath) return; // <-- User canceled Save As → EXIT
+
+                const name = newPath.split(/[/\\]/).pop();
+                setOpenFiles(files =>
+                  files.map(f =>
+                    f === activeFile ? { ...f, path: newPath, name, saved: true } : f
+                  )
+                );
+                setActiveFile({ ...activeFile, path: newPath, name, saved: true });
+                return;
               }
+
+              // Normal save
+              await window.api.saveFile(activeFile.path, activeFile.content);
+              setOpenFiles(files =>
+                files.map(f =>
+                  f.path === activeFile.path ? { ...f, saved: true } : f
+                )
+              );
+              setActiveFile(prev => ({ ...prev, saved: true }));
             }}
             language={getLanguageFromExtension(activeFile?.name)}
           />
