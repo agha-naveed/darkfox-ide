@@ -4,8 +4,8 @@
   "main": "public/electron.js",
   "homepage": "./",
   "build": {
-    "appId": "com.myide.app",
-    "productName": "AI IDE",
+    "appId": "com.prompt_code.app",
+    "productName": "PromptCode IDE",
     "directories": {
       "buildResources": "assets",
       "output": "dist"
