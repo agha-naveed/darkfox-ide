@@ -203,6 +203,11 @@ export default function App() {
 
   return (
     <div className="flex h-screen">
+      <div className="fixed bottom-1 right-1 text-white text-[12px] z-[9999999] text-end">
+        Developer:
+        <br />
+        Agha Naveed
+      </div>
       {/* Sidebar */}
       <div className="w-64 bg-zinc-900 text-white p-2 border-r border-r-zinc-700">
         <button
