@@ -3,7 +3,7 @@ import FileExplorer from "./components/FileExplorer";
 import CodeEditor from "./components/CodeEditor";
 import StatusBar from "./components/StatusBar";
 import AIPrompt from "./components/AIPrompt";
-
+import logo from './assets/logo2.png'
 // const ipcRenderer = window.api
 
 
@@ -203,13 +203,14 @@ export default function App() {
 
   return (
     <div className="flex h-screen">
-      <div className="fixed bottom-1 right-1 text-white text-[12px] z-[9999999] text-end">
+      <div className="fixed bottom-[35px] right-[18px] text-white text-[12px] z-[9999999] text-end">
         Developer:
         <br />
         Agha Naveed
       </div>
       {/* Sidebar */}
       <div className="w-64 bg-zinc-900 text-white p-2 border-r border-r-zinc-700">
+        <img src={logo} alt="logo" className="w-[80%] place-self-center mt-1 mb-3" />
         <button
           onClick={openFolder}
           className="w-full bg-blue-600 text-[14px] py-[6px] cursor-pointer transition-all hover:bg-blue-800 rounded mb-2"
