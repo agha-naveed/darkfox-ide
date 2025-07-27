@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "main": "public/electron.js",
   "homepage": "./",
+  "author": {
+    "name": "Agha Naveed Abbas",
+    "email": "naveedabs31@gmail.com",
+    "portfolio": "https://aghanaveed.vercel.app"
+  },
   "build": {
-    "appId": "com.prompt_code.app",
-    "productName": "PromptCode IDE",
+    "appId": "com.inferstack.app",
+    "productName": "InferStack AI IDE",
     "directories": {
       "buildResources": "assets",
       "output": "dist"
@@ -43,7 +48,6 @@
     "dist": "npm run build && electron-builder"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
