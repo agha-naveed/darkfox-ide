@@ -1,5 +1,5 @@
 {
-  "name": "ide",
+  "name": "darkfox-ide",
   "version": "1.0.0",
   "main": "public/electron.js",
   "homepage": "./",
@@ -9,8 +9,8 @@
     "portfolio": "https://aghanaveed.vercel.app"
   },
   "build": {
-    "appId": "com.inferstack.app",
-    "productName": "InferStack AI IDE",
+    "appId": "com.darkfox.app",
+    "productName": "DarkFox AI IDE",
     "directories": {
       "buildResources": "assets",
       "output": "dist"
