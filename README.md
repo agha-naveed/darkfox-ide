@@ -56,5 +56,5 @@ Connect with me to learn more or collaborate!
 ---
 
 
-Thank you for checking out Echo IDE! <br />
+Thank you for checking out DarkFox IDE! <br />
 Happy coding with AI. 🚀
