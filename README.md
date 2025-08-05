@@ -1,13 +1,13 @@
-# InferStack AI IDE
+# DarkFox IDE - AI Featured Code Editor
 
 **A Free-to-Use Open Source AI-Powered IDE**  
 Built with **React** & **Electron** — delivering an amazing GUI and cutting-edge AI features for developers.
 
 ---
 
-## 🚀 About InferStack AI IDE:
-InferStack is an innovative AI-enhanced Integrated Development Environment designed to boost your productivity and coding experience.
-Whether you’re prototyping or building complex applications, InferStack leverages AI to assist you seamlessly — all wrapped in a sleek, user-friendly interface powered by React and Electron.
+## 🚀 About DarkFox IDE:
+DarkFox IDE is an innovative AI-enhanced Integrated Development Environment designed to boost your productivity and coding experience.
+Whether you’re prototyping or building complex applications, DarkFox IDE leverages AI to assist you seamlessly — all wrapped in a sleek, user-friendly interface powered by React and Electron.
 
 ---
 
@@ -26,14 +26,14 @@ Whether you’re prototyping or building complex applications, InferStack levera
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/agha-naveed/inferstack-ai-ide.git
-cd inferstack-ai-ide
+git clone https://github.com/agha-naveed/darkfox-ide.git
+cd darkfox-ide
 npm install
 ```
 ---
 
 ## ⚖️ License & Usage Terms:
-InferStack AI IDE is **free to use** for everyone. <br />
+DarkFox AI IDE is **free to use** for everyone. <br />
 However, **you may NOT copy, rebrand, or release this project under your own name**.
 
 Respect the creator’s work — **created by Agha Naveed**.
@@ -56,5 +56,5 @@ Connect with me to learn more or collaborate!
 ---
 
 
-Thank you for checking out InferStack AI IDE! <br />
+Thank you for checking out Echo IDE! <br />
 Happy coding with AI. 🚀
