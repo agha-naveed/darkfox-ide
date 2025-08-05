@@ -193,8 +193,12 @@ export default function App() {
       case "ru": return "ruby";
       case "rs":  return "rust";
       case "java": return "java";
+      case "php": return "php";
+      case "yaml": 
+      case "yml": return "yaml";
       case "c": return "c";
-      case "cpp": return "cpp";
+      case "cpp":
+      case "c++": return "cpp";
       case "md": return "markdown";
       default: return "plaintext";
     }
