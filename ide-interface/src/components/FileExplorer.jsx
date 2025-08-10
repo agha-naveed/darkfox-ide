@@ -140,7 +140,7 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
   return (
     <>
       {/* Sidebar content */}
-      <div className="overflow-y-auto h-full pr-1 custom-scroll relative">
+      <div className="overflow-y-auto h-fit pr-1 custom-scroll relative">
         {renderTree(tree)}
       </div>
 
