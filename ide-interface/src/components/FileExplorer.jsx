@@ -98,7 +98,7 @@ export default function FileExplorer({ tree, onFileClick, refreshTree }) {
             key={node.path}
             onClick={() => {onFileClick(node.path); console.log(node.path)}}
             onContextMenu={(e) => handleContextMenu(e, node)}
-            className="ml-4 flex items-center gap-2 cursor-pointer hover:bg-gray-700 px-1 py-0.5 rounded text-sm truncate"
+            className="ml-2 flex items-center gap-2 cursor-pointer hover:bg-gray-700 px-1 py-0.5 rounded text-sm truncate"
           >
             <FaFileCode className="text-blue-400" />
             {node.name}

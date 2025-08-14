@@ -2,10 +2,9 @@ import Editor, { loader } from "@monaco-editor/react";
 import { useEffect } from "react";
 
 // loader.config({ paths: { vs: '/vs' } });
-// const baseURL = import.meta.env.DEV
-//   ? "http://localhost:5173/vs"
-//   : `/vs`;
-const baseURL = `${window.location.pathname}/../vs`
+const baseURL = "http://localhost:5173/vs"
+  // : `/vs`;
+// const baseURL = `${window.location.pathname}/../vs`
 
 loader.config({ paths: { vs: baseURL } });
 
@@ -33,12 +32,6 @@ export default function CodeEditor({ content, setContent, language, onSave, setE
         }}
         onMount={(editor, monaco) => {
           setEditorInstance(editor);
-          // editor.addCommand(monaco.KeyMod.CtrlCmd & monaco.KeyCode.KeyS, () => {
-          //   // if (onSave) onSave();
-          // });
-          // editor.addCommand(monaco.KeyMod.CtrlCmd & monaco.KeyMod.Shift & monaco.KeyCode.KeyS, () => {
-          //   // if (onSave) onSave();
-          // });
         }}
       />
 

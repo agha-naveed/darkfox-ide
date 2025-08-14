@@ -24,7 +24,7 @@ app.on("ready", () => {
       contextIsolation: true,
       nodeIntegration: false,   // Allow window.require in React
       
-      // webSecurity: false
+      webSecurity: false
     },
   });
 
@@ -39,9 +39,9 @@ app.on("ready", () => {
   // const isDev = !app.isPackaged;
 
   // if (isDev) {
-  //   mainWindow.loadURL("http://localhost:5173");
+    mainWindow.loadURL("http://localhost:5173");
   // } else {
-    mainWindow.loadFile(path.join(__dirname, '..', 'ide-interface/dist', 'index.html'));
+    // mainWindow.loadFile(path.join(__dirname, '..', 'ide-interface/dist', 'index.html'));
   // }
 
 
