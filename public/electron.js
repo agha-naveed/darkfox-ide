@@ -24,7 +24,7 @@ app.on("ready", () => {
       contextIsolation: true,
       nodeIntegration: false,   // Allow window.require in React
       
-      webSecurity: false
+      // webSecurity: false
     },
   });
 
